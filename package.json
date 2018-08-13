@@ -1,0 +1,25 @@
+{
+  "name": "Cropping Sub-Tool",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "dependencies": {
+    "cropperjs": "^1.4.1",
+    "jquery": "^3.3.1",
+    "jquery-cropper": "^1.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/qtcoder999/testCropPOC.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/qtcoder999/testCropPOC/issues"
+  },
+  "homepage": "https://github.com/qtcoder999/testCropPOC#readme"
+}

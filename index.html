@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <style>
+    img {
+      max-width: 100%;
+      max-height: 100vh;
+    }
+
+    button {
+      background-color: #3c8dbc;
+      
+      border: none;
+      color: white;
+      padding: 10px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      margin: 4px 2px;
+      cursor: pointer;
+    }
+  </style>
+  <meta charset="UTF-8">
+  <title>Cropping Editor</title>
+
+  <script src="./node_modules/jquery/dist/jquery.min.js"></script>
+  <script src="./node_modules/cropperjs/dist/cropper.min.js"></script>
+  <link href="./node_modules/cropperjs/dist/cropper.min.css" rel="stylesheet">
+  <script src="./node_modules/jquery-cropper/dist/jquery-cropper.min.js"></script>
+
+</head>
+
+<body>
+  <div id="custom-container-1">
+    <img id="image" src="">
+  </div>
+  <button id="myBtn" type="button" style="visibility: hidden;">Crop</button>
+</body>
+<script>
+  var imgMetadata = {};
+  var baseURL = "http://cnf-gcb-335331:3000/";
+  var relPath;
+  var img_cropMode = true;
+  var $image = $('#image');
+
+  init();
+  crop();
+
+  $('#myBtn').click(function () {
+    $.ajax({
+      url: baseURL + "crop",
+      data: imgMetadata,
+      success: function () {
+
+        console.log("inside else");
+        img_cropMode = true;
+        $image.cropper("destroy");
+        $(".cropper-hidden").removeAttr("class");
+        $('.cropper-container').remove();
+        $('#myBtn').css('visibility', 'hidden');
+        location.reload(true);
+      },
+      type: 'POST',
+    });
+  });
+
+  function init() {
+    $("#image").attr('src', localStorage.getItem("ImageToCrop"));
+    relPath = localStorage.getItem("ImageToCrop");
+    relPath = relPath.replace(window.location.origin + '/server', "");
+  }
+
+  function crop() {
+    $("#custom-container-1").dblclick(function () {
+      $('#myBtn').css('visibility', 'visible');
+      //var s = localStorage.getItem("ImageToCrop");
+      console.log("double-click fired.");
+      //alert();
+      if (img_cropMode) {
+        console.log("inside if");
+        img_cropMode = false;
+        $image.cropper({
+          cropBoxResizable: true,
+          zoomOnWheel: false,
+
+          crop: function (event) {
+            imgMetadata = { "srcPath": relPath, "width": event.detail.width, "height": event.detail.height, "x": event.detail.x, "y": event.detail.y };
+            console.log(imgMetadata);
+            // console.log("Width: " + event.detail.width);
+            // console.log("Height: " + event.detail.height);
+            // console.log("X: " + event.detail.x);
+            // console.log("Y: " + event.detail.y);
+            // console.log(event.detail.rotate);
+            // console.log(event.detail.scaleX);
+            // console.log(event.detail.scaleY);
+          }
+        });
+
+        // Get the Cropper.js instance after initialized
+        var cropper = $image.data('cropper');
+      }
+      else {
+        console.log("inside else");
+        img_cropMode = true;
+        $image.cropper("destroy");
+        $(".cropper-hidden").removeAttr("class");
+        $('.cropper-container').remove();
+        $('#myBtn').css('visibility', 'hidden');
+      }
+    });
+  }
+
+</script>
+
+</html>
