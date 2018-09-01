@@ -43,7 +43,10 @@
 </body>
 <script>
   var imgMetadata = {};
-  var baseURL = "http://cnf-gcb-335331:3000/";
+  var baseURL;
+  $.getJSON("./json/config-development.json", function(json) {
+    baseURL = json.node_server_addr;
+});
   var relPath;
   var img_cropMode = true;
   var $image = $('#image');
@@ -57,12 +60,13 @@
       data: imgMetadata,
       success: function () {
 
-        console.log("inside else");
+        //console.log("inside else");
         img_cropMode = true;
         $image.cropper("destroy");
         $(".cropper-hidden").removeAttr("class");
         $('.cropper-container').remove();
         $('#myBtn').css('visibility', 'hidden');
+        window.search =  Math.round(Math.random() * 10000000);
         location.reload(true);
       },
       type: 'POST',
@@ -70,7 +74,7 @@
   });
 
   function init() {
-    $("#image").attr('src', localStorage.getItem("ImageToCrop"));
+    $("#image").attr('src', localStorage.getItem("ImageToCrop") + "?date=" + Math.round(Math.random() * 10000000));
     relPath = localStorage.getItem("ImageToCrop");
     relPath = relPath.replace(window.location.origin + '/server', "");
   }
@@ -79,10 +83,10 @@
     $("#custom-container-1").dblclick(function () {
       $('#myBtn').css('visibility', 'visible');
       //var s = localStorage.getItem("ImageToCrop");
-      console.log("double-click fired.");
+      //console.log("double-click fired.");
       //alert();
       if (img_cropMode) {
-        console.log("inside if");
+        //console.log("inside if");
         img_cropMode = false;
         $image.cropper({
           cropBoxResizable: true,
@@ -90,7 +94,7 @@
 
           crop: function (event) {
             imgMetadata = { "srcPath": relPath, "width": event.detail.width, "height": event.detail.height, "x": event.detail.x, "y": event.detail.y };
-            console.log(imgMetadata);
+            //console.log(imgMetadata);
             // console.log("Width: " + event.detail.width);
             // console.log("Height: " + event.detail.height);
             // console.log("X: " + event.detail.x);
